@@ -5,18 +5,15 @@
 # files.
 
 require 'cucumber/rails'
+
 require 'webrat'
 require 'webrat/core/matchers'
 
 Webrat.configure do |config|
-  config.mode = :rack
+  config.mode = :rake
   config.open_error_files = false # Set to true if you want error pages to pop up in the browser
 end
-# Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In
-# order to ease the transition to Capybara we set the default here. If you'd
-# prefer to use XPath just remove this line and adjust any selectors in your
-# steps to use the XPath syntax.
-#Capybara.default_selector = :css
+
 
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how 

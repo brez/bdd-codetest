@@ -10,13 +10,7 @@ module NavigationHelpers
 
     when /the home\s?page/
       '/'
-    when /the list features page/
-      '/features'
-#rubyvu edit start
-    when /the new feature page/
-      '/features/new'
-    when /the show feature page/
-      features_path
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #

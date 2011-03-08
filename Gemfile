@@ -31,6 +31,6 @@ gem 'mysql2'
    gem 'cucumber-rails',:git => 'git://github.com/aslakhellesoy/cucumber-rails.git'
    gem 'autotest'
    gem 'database_cleaner'
-   gem 'factory_girl_rails'
+   gem 'machinist','>= 2.0.0.beta1'
    gem 'webrat'
  end
