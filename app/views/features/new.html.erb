@@ -1,0 +1,11 @@
+New feature
+
+<%= form_tag(@feature,:method=>'post',:action=>'create') do %> 
+<%= text_field_tag "feature_title" %>
+<%= text_field_tag "scenario_title" %>
+<%= text_field_tag "given_block" %>
+<%= text_field_tag "when_block" %>
+<%= text_field_tag "then_block" %>
+<%= submit_tag "submit" %>
+
+<%end%>

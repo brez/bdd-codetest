@@ -1,0 +1,16 @@
+<p>
+  <b>Title:</b>
+  <%=h @feature.title %>
+  <ul>
+  <% @feature.scenarios.each do |scenario| %>
+  <li>
+    Scenario Title : <%= h scenario.scenario_title %><br>
+    Given Block : <%= h scenario.given_block %><br>
+    When Block : <%= h scenario.when_block %><br>
+    Then Block : <%= h scenario.then_block %><br>
+  </li>
+
+  <% end %>
+  </ul>
+</p>
+<p><%= link_to "Add scenario", :action => "add_scenario",:id => @feature %></p>

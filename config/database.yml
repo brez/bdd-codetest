@@ -1,0 +1,19 @@
+development:
+  adapter: mysql2
+  encoding: utf8
+  database: bddcodetest_development
+  username: root
+  password: 
+  host: localhost
+
+test: &TEST
+  adapter: mysql2
+  encoding: utf8
+  database: bddcodetest_test
+  username: root
+  password: 
+  host: localhost
+
+cucumber:
+  <<: *TEST
+

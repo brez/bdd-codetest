@@ -1,0 +1,12 @@
+Add Scenario to feature
+
+<%= form_tag(:method=>'post',:action=>'do_add_scenario') do %> 
+<%= text_field_tag "feature_title" %>
+<%= text_field_tag "scenario_title" %>
+<%= text_field_tag "given_block" %>
+<%= text_field_tag "when_block" %>
+<%= text_field_tag "then_block" %>
+<%= hidden_field_tag "feature_id",@feature.id %>
+<%= submit_tag "submit" %>
+
+<%end%>

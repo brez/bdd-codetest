@@ -1,0 +1,8 @@
+log/*
+tmp/*
+tmp/**/*
+.DS_Store
+vendor/cache
+*.bundle
+*.swp
+rerun.txt
