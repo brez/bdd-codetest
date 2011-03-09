@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe FeaturesController do
-  context "#index" do
+  describe "#index" do
     it "should provide an index method that returns all features to the view" do
-      @features = Array.new(3) { Factory(:feature) }
+      @features = Array.new(3){Feature.make!(:title=>"test by rspec")}
       Feature.stub!(:find).and_return(@features)
       get :index
       assigns[:features].should == @features
