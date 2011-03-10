@@ -1,5 +1,5 @@
 Given /^there is feature titled "([^\"]*)"$/ do |title|
-  Feature.make!(:title => title)
+ pending
 end
 
 Given /^the feature has "([^\"]*)" of "([^\"]*)"$/ do |attribute, value|

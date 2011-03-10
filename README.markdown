@@ -38,9 +38,9 @@ Start by typing the following:
 
 You should see the following output (in red):  
 
-	4 scenarios (2 failed, 1 pending, 1 passed)
-	37 steps (2 failed, 28 skipped, 1 pending, 6 passed)
-	0m0.210s
+	4 scenarios (1 failed, 3 pending)
+    37 steps (1 failed, 33 skipped, 3 pending)
+    0m0.447s
 
 
 ## Introducing the Feature File (Cucumber)
@@ -53,42 +53,42 @@ This code test is simply an application to create (and list) new feature files (
 
 	Scenario: View the list of features
       Given there is feature titled "Some terse yet descriptive text of what is desired"
-      When I go to the "list features" page
+      When I go to "the list features page"
       And I should see "Some terse yet descriptive text of what is desired"
 
 	Scenario: Create a new feature
-      When I go to the "new feature" page
-      And I fill in "feature-title" with "Some terse yet descriptive text of what is desired"
-      And I fill in "scenario-title" with "Some determinable business situation"
-      And I fill in "given-block" with "Given some precondition"
-      And I fill in "when-block" with "When some action by the actor"
-      And I fill in "then-block" with "Then some testable outcome is achieved"
+      When I go to "the new feature page"
+      And I fill in "feature_title" with "Some terse yet descriptive text of what is desired"
+      And I fill in "scenario_title" with "Some determinable business situation"
+      And I fill in "given_block" with "Given some precondition"
+      And I fill in "when_block" with "When some action by the actor"
+      And I fill in "then_block" with "Then some testable outcome is achieved"
       And I press "submit"
-      Then I should be on the "list features page"
+      Then I should be on "the list features page"
       And I should see "Some terse yet descriptive text of what is desired"
 
 	Scenario: Add a new scenario to a existing feature
       Given there is feature titled "Some terse yet descriptive text of what is desired"
-      When I go to the "list features" page
+      When I go to "the list features page"
       And I follow "Some terse yet descriptive text of what is desired"
       And I follow "Add scenario"
-      And I fill in "feature-title" with "Another terse yet descriptive text of what is desired"
-      And I fill in "scenario-title" with "Another determinable business situation"
-      And I fill in "given-block" with "Given another precondition"
-      And I fill in "when-block" with "When some action by the actor"
-      And I fill in "then-block" with "Then some testable outcome is achieved yet again"
+      And I fill in "feature_title" with "Another terse yet descriptive text of what is desired"
+      And I fill in "scenario_title" with "Another determinable business situation"
+      And I fill in "given_block" with "Given another precondition"
+      And I fill in "when_block" with "When some action by the actor"
+      And I fill in "then_block" with "Then some testable outcome is achieved yet again"
       And I press "submit"
-      Then I should be on the "show feature page"
+      Then I should be on "the show feature page"
       And I should see "Another determinable business situation"
 
 	Scenario: View a single feature
       Given there is feature titled "Some terse yet descriptive text of what is desired"
-      And the feature has "feature-title" of "Some terse yet descriptive text of what is desired"
-      And the feature has "scenario-title" of "Some determinable business situation"
-      And the feature has "given-block" of "Given another precondition"
-      And the feature has "when-block" of "When some action by the actor"
-      And the feature has "then-block" of "Then some testable outcome is achieved"
-      When I go to the "list features" page
+      And the feature has "feature_title" of "Some terse yet descriptive text of what is desired"
+      And the feature has "scenario_title" of "Some determinable business situation"
+      And the feature has "given_block" of "Given another precondition"
+      And the feature has "when_block" of "When some action by the actor"
+      And the feature has "then_block" of "Then some testable outcome is achieved"
+      When I go to "the list features page"
       And I follow "Some terse yet descriptive text of what is desired"
       Then I should see "Some terse yet descriptive text of what is desired"
       And I should see "Some determinable business situation"
@@ -121,51 +121,44 @@ Note the line:
     TODO (Cucumber::Pending)
       ./features/step_definitions/gherkin_steps.rb:2:in /^there is feature titled "([^\"]*)"$/'
  
-This means that the step definition has not yet been implemented. This step definition uses a Factory to create a Feature model for testing but we need to define the Feature model first using the rspec_model generator:  
-
-	$ ./script/generate rspec_model feature
-
-      create  app/models/
-      create  spec/models/
-      create  spec/fixtures/
-      create  app/models/feature.rb
-      create  spec/models/feature_spec.rb
-      create  spec/fixtures/features.yml
-      create  db/migrate
-      create  db/migrate/20100321045705_create_features.rb
-
-Now that we have a model, let's create the factory file and add the factory (to spec/factories.rb). Based on our first scenario, we can determine which attributes are needed:  
+This means that the step definition has not yet been implemented. 
+This step definition uses Machinist to create a Feature model for testing but we need to define the Feature model first using rails generator:
+$ rails generate model feature
+      invoke  active_record
+      create    db/migrate/20110310073510_create_features.rb
+      create    app/models/feature.rb
+      invoke    rspec
+      create      spec/models/feature_spec.rb
+Now that we have a model, let's add the Feature model (to features/support/blueprints.rb). Based on our first scenario, we can determine which attributes are needed:
 
 	Scenario: View the list of features
       Given there is feature titled "Some terse yet descriptive text of what is desired"
-      When I go to the "list features" page
+      When I go to "the list features page"
       And I should see "Some terse yet descriptive text of what is desired"
 
 It looks like we need an attribute 'title' for the Feature model  
 
- 	Factory.define :feature do |f|
-      f.title 'Some terse yet descriptive text of what is desired'
+ 	Feature.blueprint do
+      title {'Some terse yet descriptive text of what is desired'}
     end 
 
-Now we can go into the step definition (features/step_definitions/gherkin_steps.rb) and create the Feature factory:  
+Now we can go into the step definition (features/step_definitions/gherkin_steps.rb) and edit the Feature factory:  
 
  	Given /^there is feature titled "([^\"]*)"$/ do |title|
-      feature = Factory(:feature)
+      feature = Feature.make!
 	end
 
 Note that you can also override the default value with something this:  
 
-	feature = Factory(:feature, :title => 'A different title than the default')
+	feature = Feature.make!(:title => 'A different title than the default')
 
 Now let's go back and see the scenario is passing:
 
-	$ ./script/cucumber features/gherkin.feature
-
-	Scenario: View the list of features                                                  # features/gherkin.feature:6
-      Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
-        Mysql::Error: Table 'bddcodetest_test.features' doesn't exist: SHOW FIELDS FROM features (ActiveRecord::StatementInvalid)
-        ./features/step_definitions/gherkin_steps.rb:2:in /^there is feature titled "([^\"]*)"$/'
-        features/gherkin.feature:7:in Given there is feature titled "Some terse yet descriptive text of what is desired"'
+	$ rake cucumber 
+    (in /home/endax/Projects/test-env/bdd-codetest)
+     You have 1 pending migrations:
+     20110310073510 CreateFeatures
+     Run "rake db:migrate" to update your database then try again.
  
 No, it looks like we haven't defined the Feature model in our database. In fact, we haven't done much of anything as far as the Feature model is concerned, so let's pause with the feature file and implement the spec and model for Feature.
 
@@ -195,33 +188,51 @@ Note you need to run db:test:prepare after every migration in order to reset the
 
 	(in /projects/bdd_codetest)
 	.
-	Finished in 0.102848 seconds
-	1 example, 0 failures
+	Finished in 0.0138 seconds
+    1 examples, 0 failures, 1 pending
 
-Now this can be deceiving because it seems to be passing without any changes, of course we need to update the spec (spec/models/feature_spec.rb). Let's do that by adding an test for the title attribute and to validate the presence of the it.
+We have 1 pending test. of course we need to update the spec (spec/models/feature_spec.rb). Let's do that by editing an test for the title attribute and to validate the presence of the it.
 
 	describe Feature do
   	  it "should be valid with a title" do
-        Factory(:feature).should be_valid
+        Feature.make.should be_valid
       end
       it "should be invalid without a title" do
-        Factory.build(:feature, :title => nil).should be_invalid
+        Feature.make(:title => nil).should be_invalid
       end
     end
 
-And when we test, we find we have a single failure:
+    $rake rspec
+    Failures:
+     .....
+     Failure/Error: Feature.make.should be_valid
+     Machinist::NoBlueprintError:
+       No master blueprint defined for class Feature
+     .....
+
+    Finished in 0.01379 seconds
+    2 examples, 2 failures
+
+It look like we don't have Feature model for Rspec test.
+Let's define the Feature model in spec/support/blueprints.rb
+
+    Feature.blueprint do
+      title {"some title for rspec test"}
+    end
+    
+And test again, we find we have a single failure:
 
 	$rake rspec
 
-	1)
-	'Feature should be invalid without a title' FAILED
-	expected invalid? to return true, got false
-	./spec/models/feature_spec.rb:8:
+	1) Feature should be invalid without a title
+     Failure/Error: Feature.make(:title => nil).should be_invalid
+       expected invalid? to return true, got false
+     # ./spec/models/feature_spec.rb:8
 
-	Finished in 0.070905 seconds
-	2 examples, 1 failure
+    Finished in 0.16739 seconds
+    2 examples, 1 failure
 
-At this point we are in the Red and need to get this spec back into the Green by adding a validates_presence_of to the feature model (app/models/feature.rb):
+At this point we have 1 test in the Red remain and need to get this spec back into the Green by adding a validates_presence_of to the feature model (app/models/feature.rb):
 
 	class Feature < ActiveRecord::Base
   	  validates_presence_of :title
@@ -231,89 +242,85 @@ And test again:
 
 	$rake rspec
 
-	Finished in 0.071158 seconds
-	2 examples, 0 failures
+	Finished in 0.02079 seconds
+    2 examples, 0 failures
 
 Now that we've got our factory, model, and spec in place we can return to the cucumber scenario:
 
-	$ ./script/cucumber features/gherkin.feature
+	$ rake cucumber
 
 	Scenario: View the list of features                                                  # features/gherkin.feature:6
-      Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
-      When I go to "the list features page"                                              # features/step_definitions/web_steps.rb:18
+    Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
+    When I go to "the list features page"                                              # features/step_definitions/web_steps.rb:34
       Can't find mapping from ""the list features page"" to a path.
-      Now, go and add a mapping in /projects/bdd_codetest/features/support/paths.rb (RuntimeError)
-      ./features/support/paths.rb:22:in path_to'
-      ./features/step_definitions/web_steps.rb:19:in /^(?:|I )go to (.+)$/'
-      features/gherkin.feature:8:in When I go to "the list features page"'
-      And I should see "Some terse yet descriptive text of what is desired"              # features/step_definitions/web_steps.rb:142
+      Now, go and add a mapping in /home/endax/Projects/test-env/bdd-codetest/features/support/paths.rb (RuntimeError)
+      ./features/support/paths.rb:28:in `path_to'
+      ./features/step_definitions/web_steps.rb:35:in `/^(?:|I )go to (.+)$/'
+      features/gherkin.feature:8:in `When I go to "the list features page"'
+    And I should see "Some terse yet descriptive text of what is desired"  
 
 
-Now we have the Given step passing but are failing on the When step. This is because we haven't defined the 'list features' page to cucumber. We can do this by editing the features/support/paths.rb file:
+Now we have the Given step passing but are failing on the When step. This is because we haven't defined 'the list features page' to cucumber. We can do this by editing the features/support/paths.rb file:
 
     when /the list features page/
-      '/features'
+      '/features/'
 
 And run again:
 
 	$ rake cucumber
 
 	Scenario: View the list of features                                                  # features/gherkin.feature:6
-      Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
-      When I go to "the list features page"                                              # features/step_definitions/web_steps.rb:18
-      No route matches "/features" with {:method=>:get} (ActionController::RoutingError)
-      (eval):2:in visit'
-      ./features/step_definitions/web_steps.rb:19:in /^(?:|I )go to (.+)$/'
-      features/gherkin.feature:8:in When I go to "the list features page"'
-      And I should see "Some terse yet descriptive text of what is desired"              # features/step_definitions/web_steps.rb:142
+       Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
+    When I go to "the list features page"                                              # features/step_definitions/web_steps.rb:34
+      No route matches "/features" (ActionController::RoutingError)
+      ./features/step_definitions/web_steps.rb:35:in `/^(?:|I )go to (.+)$/'
+      features/gherkin.feature:8:in `When I go to "the list features page"'
+    And I should see "Some terse yet descriptive text of what is desired" 
 
 Turns out we haven't defined a controller for 'features', let's do that now
 
-	$ ./script/generate rspec_controller features
-
-      exists  app/controllers/
-      exists  app/helpers/
-      create  app/views/features
-      create  spec/controllers/
-      create  spec/helpers/
-      create  spec/views/features
-      create  spec/controllers/features_controller_spec.rb
-      create  spec/helpers/features_helper_spec.rb
+	$ rails generate controller features 
       create  app/controllers/features_controller.rb
-      create  app/helpers/features_helper.rb
+      invoke  erb
+      create    app/views/features
+      invoke  rspec
+      create    spec/controllers/features_controller_spec.rb
+      invoke  helper
+      create    app/helpers/features_helper.rb
+      invoke    rspec
+      create      spec/helpers/features_helper_spec.rb
 
 And run again:
 
 	$ rake cucumber
 
 	Scenario: View the list of features                                                  # features/gherkin.feature:6
-      Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
-      When I go to "the list features page"                                              # features/step_definitions/web_steps.rb:18
-      No action responded to index. Actions:  (ActionController::UnknownAction)
-      (eval):2:in visit'
-      ./features/step_definitions/web_steps.rb:19:in /^(?:|I )go to (.+)$/'
-      features/gherkin.feature:8:in When I go to "the list features page"'
-      And I should see "Some terse yet descriptive text of what is desired"              # features/step_definitions/web_steps.rb:142
+    Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
+    When I go to "the list features page"                                              # features/step_definitions/web_steps.rb:34
+      The action 'index' could not be found for FeaturesController (AbstractController::ActionNotFound)
+      ./features/step_definitions/web_steps.rb:35:in `/^(?:|I )go to (.+)$/'
+      features/gherkin.feature:8:in `When I go to "the list features page"'
+    And I should see "Some terse yet descriptive text of what is desired" 
 
 It seems I haven't described a method called 'index' on my controller, again since this is TDD, we write the spec first (spec/controllers/features_controller_spec.rb):
 
 	describe FeaturesController do
-      context "#index" do
-        it "should provide an index method that returns all features to the view" do
-          @features = Array.new(3) { Factory(:feature) }
-          Feature.stub!(:find).and_return(@features)
-          get :index
-          assigns[:features].should == @features
+      describe "#index" do
+         it "should provide an index method that returns all features to the view" do
+             @features = Array.new(3){Feature.make!}
+             Feature.stub!(:find).and_return(@features)
+             get :index
+             assigns[:features].should == @features
         end
         it "should provide an index method that returns an empty array if there are no features" do
-          get :index
-          assigns[:features].empty?.should be(true)
+            get :index
+            assigns[:features].empty?.should be(true)
         end
         it "should render the index template" do
-          get :index
-          response.should render_template(:index)
+            get :index
+            response.should render_template(:index)
         end
-      end
+  end
 	end
 
 Note that I've opted to use the built in rspec mocking and stubbing - some people suggest that rspec mocking and stubbing at the controller level is more brittle (though it has better support overall for stubbing); additionally a viable option is to the shoulda library matchers as well (which also work in rspec). This is certainly part of a larger conversation on mocking and stubbing in general and what's most important is that you're doing it, how you're doing it isn't that important. In general, we supports a default stack for BDD but is very flexible in terms of specific libraries used, i.e. you should use the best available library for the task (even fixtures can be applicable in some instances).
@@ -323,9 +330,11 @@ Let's run it now:
 	$rake rspec
 
 	...FF
-	1)
-	ActionController::UnknownAction in 'FeaturesController#index should use provide an index method that returns all features to the view'
-	No action responded to index. Actions:
+	1)	FeaturesController#index should provide an index method that returns all features to the view
+	  Failure/Error: get :index
+      AbstractController::ActionNotFound:
+       The action 'index' could not be found for FeaturesController
+      # ./spec/controllers/features_controller_spec.rb:8
 
 We still haven't implemented the index method on the features controller (app/controllers/features_controller.rb), let's do that now:
 
@@ -340,30 +349,13 @@ Let's run it now:
 	$rake rspec
 
 	......
+    1) FeaturesController#index should provide an index method that returns all features to the view
+     Failure/Error: get :index
+     ActionView::MissingTemplate:
+       Missing template features/index with {:formats=>[:html], .....
+     # ./spec/controllers/features_controller_spec.rb:8
 
-	Finished in 0.148571 seconds
-	6 examples, 0 failures
-
-Looking good. Heading back to the feature:
-
-	$ rake cucumber
-
-	Scenario: View the list of features                                                  # features/gherkin.feature:6
-      Given there is feature titled "Some terse yet descriptive text of what is desired" # features/step_definitions/gherkin_steps.rb:1
-      When I go to "the list features page"                                              # features/step_definitions/web_steps.rb:18
-      Missing template features/index.erb in view path app/views (ActionView::MissingTemplate)
-      (eval):2:in visit'
-      ./features/step_definitions/web_steps.rb:19:in /^(?:|I )go to (.+)$/'
-      features/gherkin.feature:8:in When I go to "the list features page"'
-      And I should see "Some terse yet descriptive text of what is desired"              # features/step_definitions/web_steps.rb:142
-
-Seems we're missing the actual view itself; let's add that now (app/views/features/index.html.erb). First we'll add a layout for the entire application (app/views/layout/application.html.erb):
-
-	<html>
-  	  <body>
-        <%= yield %>
-      </body>
-	</html>
+Seems we're missing the actual view itself; let's add that now (app/views/features/index.html.erb). 
 
 And the specific view for index (app/views/features/index.html.erb):
 
@@ -374,7 +366,29 @@ And the specific view for index (app/views/features/index.html.erb):
     </ul>
 
 One more time:
+    $ rake spec
+    .....*
 
+    Pending:
+    FeaturesHelper add some examples to (or delete) /home/endax/Projects/test-env/bdd-codetest/spec/helpers/features_helper_spec.rb
+    # Not Yet Implemented
+    # ./spec/helpers/features_helper_spec.rb:14
+
+Finished in 0.15682 seconds
+6 examples, 0 failures, 1 pending
+
+Seem it's better now we just have 1 pending. We have it by Rspec auto create spec/helpers/features_helper_spec.rb file when we create fetures controller. Pass it just by delete or comment out the line:
+   pending "add some examples to (or delete) #{__FILE__}"
+
+run again:
+    $ rake spec
+    .....
+
+    Finished in 0.13336 seconds
+    5 examples, 0 failures
+
+Now we have all pass with rspec. Turn back to cucumber: 
+    
 	$ rake cucumber 
 
 	Scenario: View the list of features                                                  # features/gherkin.feature:6

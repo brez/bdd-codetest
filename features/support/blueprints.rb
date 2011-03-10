@@ -1,7 +1,4 @@
 require 'machinist/active_record'
-Feature.blueprint do
-   
-end
 
 # Add your blueprints here.
 #
