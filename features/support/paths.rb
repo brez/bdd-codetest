@@ -12,10 +12,7 @@ module NavigationHelpers
       '/'
     when /the list features page/
       '/features/'
-    when /the new feature page/
-      '/features/new'
-    when /the show feature page/
-      feature_path
+   
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
