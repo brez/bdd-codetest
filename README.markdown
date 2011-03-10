@@ -387,7 +387,7 @@ run again:
     Finished in 0.13336 seconds
     5 examples, 0 failures
 
-Now we have all pass with rspec. Turn back to cucumber: 
+Looking good. Turn back to cucumber: 
     
 	$ rake cucumber 
 
