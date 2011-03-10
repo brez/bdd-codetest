@@ -245,7 +245,7 @@ And test again:
 	Finished in 0.02079 seconds
     2 examples, 0 failures
 
-Now that we've got our factory, model, and spec in place we can return to the cucumber scenario:
+Now that we've got our model, and spec in place we can return to the cucumber scenario:
 
 	$ rake cucumber
 
@@ -320,7 +320,7 @@ It seems I haven't described a method called 'index' on my controller, again sin
             get :index
             response.should render_template(:index)
         end
-  end
+      end
 	end
 
 Note that I've opted to use the built in rspec mocking and stubbing - some people suggest that rspec mocking and stubbing at the controller level is more brittle (though it has better support overall for stubbing); additionally a viable option is to the shoulda library matchers as well (which also work in rspec). This is certainly part of a larger conversation on mocking and stubbing in general and what's most important is that you're doing it, how you're doing it isn't that important. In general, we supports a default stack for BDD but is very flexible in terms of specific libraries used, i.e. you should use the best available library for the task (even fixtures can be applicable in some instances).
@@ -374,11 +374,11 @@ One more time:
     # Not Yet Implemented
     # ./spec/helpers/features_helper_spec.rb:14
 
-Finished in 0.15682 seconds
-6 examples, 0 failures, 1 pending
+    Finished in 0.15682 seconds
+    6 examples, 0 failures, 1 pending
 
-Seem it's better now we just have 1 pending. We have it by Rspec auto create spec/helpers/features_helper_spec.rb file when we create fetures controller. Pass it just by delete or comment out the line:
-   pending "add some examples to (or delete) #{__FILE__}"
+Look it better now, we just have 1 pending. We have it by Rspec auto create spec/helpers/features_helper_spec.rb file when we create fetures controller. Pass it just by delete or comment out the line:
+    pending "add some examples to (or delete) #{__FILE__}"
 
 run again:
     $ rake spec
