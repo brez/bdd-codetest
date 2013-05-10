@@ -1,4 +1,4 @@
-# ENDAX, LLC - BDD Code Test 
+BDD Code Test 
 
 ## Introduction
 The purpose of this test is to introduce and familiarize you with the Behavior Driven Development process used for all development. The test includes a feature file (explained shortly) and implementation for the first scenario. You will be expected to follow a Red / Green / Refactor process to develop the application and is likely the complete opposite of how you have developed in the past (you write a failing test first, then implement the functionality).  
@@ -419,4 +419,10 @@ The goals for a successful submission are fairly straightforward:
 
 When testing your submission, the first thing we will do is simply run the cucumber / rspecs to confirm they are passing. If there are red tests (not passing), you will automatically fail the test, i.e. it is vital that these are passing. From there we will do a more subjective review of how you implemented the project in terms of the code itself, but is of lesser importance. Your ability to adapt to this process is more important than any previous experience.
 
-&copy; 2011 ENDAX, LLC - Freely available for testing purposes, please cite if published. 
+Copyright (C)2011 John Bresnik
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
